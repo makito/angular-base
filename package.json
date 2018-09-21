@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "extract-locale": "ngx-translate-extract -i ./src/app -o ./src/assets/i18n/ru.po ./src/assets/i18n/en.po -c -f pot -m TT",
+    "postinstall": "node patch.js && postinstall.js"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +24,11 @@
     "@angular/pwa": "^0.8.3",
     "@angular/router": "^6.1.0",
     "@angular/service-worker": "^6.1.0",
+    "@biesbjerg/ngx-translate-po-http-loader": "^3.1.0",
+    "@ngx-translate/core": "^10.0.2",
+    "@types/lodash": "^4.14.116",
     "core-js": "^2.5.4",
+    "lodash": "^4.17.11",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26"
   },
@@ -31,6 +37,7 @@
     "@angular/cli": "~6.1.4",
     "@angular/compiler-cli": "^6.1.0",
     "@angular/language-service": "^6.1.0",
+    "@biesbjerg/ngx-translate-extract": "^2.3.4",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",

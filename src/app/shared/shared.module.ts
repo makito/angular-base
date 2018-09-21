@@ -3,23 +3,31 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { LangChangerComponent } from './components/lang-changer/lang-changer.component';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
   declarations: [
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    LangChangerComponent
   ],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    PageNotFoundComponent
+    TranslateModule,
+
+    PageNotFoundComponent,
+    LangChangerComponent
   ]
 })
 export class SharedModule { }
