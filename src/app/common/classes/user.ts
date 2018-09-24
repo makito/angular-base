@@ -14,7 +14,11 @@ export class User extends UserBase implements IUser {
   }
 
   toJSON(): IUser {
-    return Object.assign({}, this);
+    const data: any = Object.assign({}, this, {
+      personalName: this.personalName
+    });
+    delete data._personalName;
+    return <IUser>data;
   }
 
 }
