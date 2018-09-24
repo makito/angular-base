@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { of } from 'rxjs';
@@ -111,8 +112,8 @@ export class LoginPageComponent implements OnInit, AfterViewChecked {
         } else {
           this._router.navigate(['/']);
         }
-        }, (error: string) => {
-          this.error = error || TT('Неправильный логин или пароль');
+        }, (error: HttpErrorResponse) => {
+          this.error = error.message || TT('Неправильный логин или пароль');
           this._elementToFocus = this._passwordElement;
         }
       );

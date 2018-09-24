@@ -179,7 +179,6 @@ export class AuthService {
   private _oauthRequest(body: HttpParams): Observable<IJwt> {
     return this._http.post<IJwt>(`${AuthService._oauthBaseUrl}token`, body)
       .pipe(
-        catchError((errResponse: HttpErrorResponse) => observableThrowError(errResponse.error.error_description)),
         tap(this._onSuccessRespone.bind(this))
       );
   }

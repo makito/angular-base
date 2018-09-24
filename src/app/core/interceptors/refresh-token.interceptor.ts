@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders
+  HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders, HttpParams
 } from '@angular/common/http';
 import { throwError as observableThrowError, Observable, BehaviorSubject, empty } from 'rxjs';
 import { catchError, finalize, switchMap, filter, take } from 'rxjs/operators';
@@ -96,16 +96,17 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
    * @param req объект запроса приведшего к ошибке
    * @param error объект ошибки
    */
-  private _handleError(req: HttpRequest<any>, error: HttpErrorResponse): Observable<any> {
+  private _handleError(req: HttpRequest<any>, error: HttpErrorResponse): Observable<HttpErrorResponse> {
     // определяем есть ли заголовок молчания при ошибках
     const silent: boolean = req.headers instanceof HttpHeaders &&
       req.headers.has('silent') && req.headers['silent'] === '1';
 
     if (!silent || error.status === 500) {
       // здесь обработчик критических ошибок
-      console.log(<IApiError>{ response: error, data: req.body });
+      alert(`Ошибка ${error.status}`);
+      console.log(<IApiError>{ response: error, data: (<HttpParams>req.body).toString() });
     }
-    return observableThrowError(error.status);
+    return observableThrowError(error);
   }
 
   /**
