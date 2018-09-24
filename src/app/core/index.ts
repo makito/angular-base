@@ -7,5 +7,6 @@ export * from './services/api.service';
 
 export * from './interceptors/auth.interceptor';
 export * from './interceptors/lang.interceptor';
+export * from './interceptors/refresh-token.interceptor';
 
 export * from './guards/auth.guard';
