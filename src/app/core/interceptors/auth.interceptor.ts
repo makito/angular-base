@@ -10,12 +10,17 @@ import { Observable } from 'rxjs';
 })
 export class AuthInterceptor implements HttpInterceptor {
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token: string = localStorage.getItem('jwt_access_token');
+  /**
+   * добавляет заголовок с токеном в запрос
+   * @param req запрос
+   * @param token токен
+   */
+  static addToken(req: HttpRequest<any>, token: string = localStorage.getItem('jwt_access_token')): HttpRequest<any> {
     const noAuth: boolean = req.body instanceof HttpParams &&
       req.body.has('no_auth');
+
+    // если есть токен и нет параметра обращаться без авторизации то ставим заголовки
     if (!!token && !noAuth) {
-      // если есть токен и нет параметра обращаться без авторизации то ставим заголовки
       req = req.clone({
         setHeaders: {
           Accept: 'application/json',
@@ -23,7 +28,11 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
     }
-    return next.handle(req);
+    return req;
+  }
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(AuthInterceptor.addToken(req));
   }
 
 }
