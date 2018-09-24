@@ -3,6 +3,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AuthGuard } from './guards/auth.guard';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
       useClass: AuthInterceptor,
       multi: true
     },
-    AuthService
+    AuthService,
+    AuthGuard
   ],
   declarations: []
 })
