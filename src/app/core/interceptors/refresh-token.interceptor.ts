@@ -7,7 +7,7 @@ import { catchError, finalize, switchMap, filter, take } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
 import { AuthInterceptor } from './auth.interceptor';
-import { IApiError, AuthAbstractInterceptor } from '@app/common';
+import { IApiError, AuthAbstractInterceptor, IHttpError } from '@app/common';
 
 /**
  * интерсептор рефреша токена
@@ -108,7 +108,7 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
    * @param req объект запроса приведшего к ошибке
    * @param error объект ошибки
    */
-  private _handleError(req: HttpRequest<any>, error: HttpErrorResponse): Observable<HttpErrorResponse> {
+  private _handleError(req: HttpRequest<any>, error: HttpErrorResponse): Observable<IHttpError | HttpErrorResponse> {
     // определяем есть ли заголовок молчания при ошибках
     const silent: boolean = req.headers instanceof HttpHeaders &&
       req.headers.has('silent') &&
@@ -125,7 +125,9 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
       alert(`Ошибка ${error.status}`);
       console.log(<IApiError>{ response: error, data: (<HttpParams>req.body).toString() });
     }
-    return observableThrowError(error);
+
+    const errorEvent = <IHttpError>error.error || error;
+    return observableThrowError(errorEvent);
   }
 
   /**

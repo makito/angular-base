@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { tap, concatMap, finalize } from 'rxjs/operators';
 
 import { TT, AuthService } from '@app/core';
-import { User } from '@app/common';
+import { User, IHttpError } from '@app/common';
 
 /**
  * страница авторизации
@@ -112,8 +112,8 @@ export class LoginPageComponent implements OnInit, AfterViewChecked {
         } else {
           this._router.navigate(['/']);
         }
-        }, (error: HttpErrorResponse) => {
-          this.error = error.message || TT('Неправильный логин или пароль');
+        }, (error: IHttpError | HttpErrorResponse) => {
+          this.error = (<IHttpError>error).error_description || TT('Неправильный логин или пароль');
           this._elementToFocus = this._passwordElement;
         }
       );
