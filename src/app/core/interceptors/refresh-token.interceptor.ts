@@ -114,7 +114,13 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
       req.headers.has('silent') &&
       req.headers['silent'] === '1';
 
-    if (!silent) {
+    const invalidGrant = error &&
+      error.status === 400 &&
+      error.error &&
+      error.error.error === 'invalid_grant';
+    if (invalidGrant) {
+      this._relogin();
+    } else if (!silent) {
       // каким то образом обрабатываем ошибки
       alert(`Ошибка ${error.status}`);
       console.log(<IApiError>{ response: error, data: (<HttpParams>req.body).toString() });
