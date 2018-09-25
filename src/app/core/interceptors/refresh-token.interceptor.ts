@@ -52,6 +52,8 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
           switch (error.status) {
             case 401:
               return this._handle401Error(req, next);
+            case 500:
+              return this._handle500Error(req, error);
             default:
               return this._handleError(req, error);
           }
@@ -102,20 +104,33 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
   }
 
   /**
-   * обработчик всех ошибок кроме 401
+   * обработчик всех ошибок кроме 401 и 500
    * @param req объект запроса приведшего к ошибке
    * @param error объект ошибки
    */
   private _handleError(req: HttpRequest<any>, error: HttpErrorResponse): Observable<HttpErrorResponse> {
     // определяем есть ли заголовок молчания при ошибках
     const silent: boolean = req.headers instanceof HttpHeaders &&
-      req.headers.has('silent') && req.headers['silent'] === '1';
+      req.headers.has('silent') &&
+      req.headers['silent'] === '1';
 
-    if (!silent || error.status === 500) {
-      // здесь обработчик критических ошибок
+    if (!silent) {
+      // каким то образом обрабатываем ошибки
       alert(`Ошибка ${error.status}`);
       console.log(<IApiError>{ response: error, data: (<HttpParams>req.body).toString() });
     }
+    return observableThrowError(error);
+  }
+
+  /**
+   * обработчик ошибок 500
+   * @param req объект запроса приведшего к ошибке
+   * @param error объект ошибки
+   */
+  private _handle500Error(req: HttpRequest<any>, error: HttpErrorResponse): Observable<HttpErrorResponse> {
+    // обрабатываем критические ошибки
+    alert(`Ошибка ${error.status}`);
+    console.log(<IApiError>{ response: error, data: (<HttpParams>req.body).toString() });
     return observableThrowError(error);
   }
 
