@@ -5,8 +5,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { of } from 'rxjs';
 import { tap, concatMap, finalize } from 'rxjs/operators';
 
-import { TT, AuthService } from '@app/core';
-import { User, IHttpError } from '@app/common';
+import { AuthService } from '@app/core';
+import { User, IHttpError, TT } from '@app/common';
 
 /**
  * страница авторизации

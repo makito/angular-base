@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { DescribedValue, Role } from '@app/common';
-import { TT } from '../translation-marker';
+import { DescribedValue, Role, TT } from '@app/common';
 
 /**
  * сервис для получения значений перечислений
