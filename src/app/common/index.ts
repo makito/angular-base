@@ -8,6 +8,7 @@ export * from './classes/user-name';
 export * from './classes/user-base';
 export * from './classes/user';
 export * from './classes/account';
+export * from './classes/auth-abstract-interceptor';
 
 export * from './enums/role.enum';
 

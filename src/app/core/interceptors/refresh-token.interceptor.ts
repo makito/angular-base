@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders, HttpParams
+  HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders, HttpParams, HttpClient
 } from '@angular/common/http';
 import { throwError as observableThrowError, Observable, BehaviorSubject, empty } from 'rxjs';
 import { catchError, finalize, switchMap, filter, take } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
 import { AuthInterceptor } from './auth.interceptor';
-import { IApiError } from '@app/common';
+import { IApiError, AuthAbstractInterceptor } from '@app/common';
 
 /**
  * интерсептор рефреша токена
@@ -15,7 +15,7 @@ import { IApiError } from '@app/common';
 @Injectable({
   providedIn: 'root'
 })
-export class RefreshTokenInterceptor implements HttpInterceptor {
+export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements HttpInterceptor {
 
   /**
    * признак обновления токена
@@ -23,6 +23,11 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
   private _isRefreshingToken = false;
 
   private _tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
+  /**
+   * сервис авторизации
+   */
+  private _authService: AuthService;
 
   /**
    * восстановление ответа сервера об ошибке из arraybuffer
@@ -36,10 +41,6 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
     }
     return new HttpErrorResponse(clonedError);
   }
-
-  constructor(
-    private _authService: AuthService
-  ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req)
@@ -56,6 +57,15 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
           }
         })
       );
+  }
+
+  /**
+   * инициализация интерсептора
+   * @param http класс angular для работы по http
+   * @param auth сервис авторизации
+   */
+  init(http: HttpClient, auth: AuthService) {
+    this._authService = auth;
   }
 
   /**
