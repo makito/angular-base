@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { AuthService } from '@app/core';
+
 /**
  * главная страница приложения
  */
@@ -9,9 +11,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PageComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _authService: AuthService
+  ) { }
 
   ngOnInit() {
+  }
+
+  logout(e: Event) {
+    e.preventDefault();
+    this._authService.logout();
   }
 
 }
