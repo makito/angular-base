@@ -7,6 +7,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { LangChangerComponent } from './components/lang-changer/lang-changer.component';
+import { MaxLengthDirective } from './directives/max-length.directive';
+import { DisableControlDirective } from './directives/disable-control.directive';
+import { StopPropagationDirective } from './directives/stop-propagation.directive';
+import { PreventDefaultDirective } from './directives/prevent-default.directive';
 
 @NgModule({
   imports: [
@@ -18,7 +22,11 @@ import { LangChangerComponent } from './components/lang-changer/lang-changer.com
   ],
   declarations: [
     PageNotFoundComponent,
-    LangChangerComponent
+    LangChangerComponent,
+    MaxLengthDirective,
+    DisableControlDirective,
+    StopPropagationDirective,
+    PreventDefaultDirective
   ],
   exports: [
     CommonModule,
@@ -27,7 +35,11 @@ import { LangChangerComponent } from './components/lang-changer/lang-changer.com
     TranslateModule,
 
     PageNotFoundComponent,
-    LangChangerComponent
+    LangChangerComponent,
+    MaxLengthDirective,
+    DisableControlDirective,
+    StopPropagationDirective,
+    PreventDefaultDirective
   ]
 })
 export class SharedModule { }

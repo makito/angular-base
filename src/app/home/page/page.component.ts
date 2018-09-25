@@ -18,8 +18,7 @@ export class PageComponent implements OnInit {
   ngOnInit() {
   }
 
-  logout(e: Event) {
-    e.preventDefault();
+  logout() {
     this._authService.logout();
   }
 
