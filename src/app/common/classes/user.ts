@@ -10,7 +10,12 @@ export class User extends UserBase implements IUser {
   roles: Array<Role> = [];
 
   constructor(data?: IUser) {
-    super(data);
+    super();
+    if (!data) {
+      return;
+    }
+
+    Object.assign(this, data);
   }
 
   toJSON(): IUser {

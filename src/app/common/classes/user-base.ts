@@ -1,11 +1,10 @@
 import { UserName } from './user-name';
 import { IUserBase } from '../models/user-base.model';
-import { BaseClass } from './base-class';
 
 /**
  * базовый пользователь
  */
-export abstract class UserBase extends BaseClass implements IUserBase {
+export abstract class UserBase implements IUserBase {
 
   /**
    * имя пользователя
@@ -22,10 +21,6 @@ export abstract class UserBase extends BaseClass implements IUserBase {
   }
   public set personalName(value: UserName) {
     this._personalName = this._setName(value);
-  }
-
-  constructor(data?: IUserBase) {
-    super(data);
   }
 
   /**

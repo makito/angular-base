@@ -1,6 +1,5 @@
 import { IAccount } from '../models/account.model';
 import { User } from './user';
-import { BaseClass } from './base-class';
 import { IToken } from '../interfaces/token.interface';
 import { Role } from '../enums/role.enum';
 import { UserName } from './user-name';
@@ -8,7 +7,7 @@ import { UserName } from './user-name';
 /**
  * аккаунт пользователя
  */
-export class Account extends BaseClass implements IAccount {
+export class Account implements IAccount {
 
   /**
    * токен
@@ -55,7 +54,11 @@ export class Account extends BaseClass implements IAccount {
   }
 
   constructor(data?: IAccount) {
-    super(data);
+    if (!data) {
+      return;
+    }
+
+    Object.assign(this, data);
   }
 
   /**

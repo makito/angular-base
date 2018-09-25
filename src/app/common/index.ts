@@ -3,7 +3,6 @@ export * from './classes/custom-validators';
 export * from './classes/validator';
 export * from './classes/value-accessor-base';
 
-export * from './classes/base-class';
 export * from './classes/user-name';
 export * from './classes/user-base';
 export * from './classes/user';
