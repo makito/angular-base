@@ -32,5 +32,8 @@ msgstr "Password"
 msgid "Войти"
 msgstr "Authorize"
 
+msgid "Выйти"
+msgstr "Logout"
+
 msgid "Страница не найдена"
 msgstr "Page not found"
