@@ -23,4 +23,4 @@ export * from './models/user-base.model';
 export * from './models/account.model';
 
 export * from './misc/utils';
-export * from './misc/translation-marker';
+export * from './misc/localization';
