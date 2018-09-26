@@ -78,6 +78,7 @@ export class LoginPageComponent implements OnInit, AfterViewChecked {
       return;
     }
 
+    // если пользователь есть, заполняем логин, ставим фокус в поле пароля
     const login = this.loginForm.get('userName');
     this.recentUser = recentAccount.user;
     login.patchValue(recentAccount.userName);
@@ -105,18 +106,28 @@ export class LoginPageComponent implements OnInit, AfterViewChecked {
         concatMap(() => this._authService.authenticate(userName, password)),
         finalize(() => this.isLoading = false)
       )
-      .subscribe(() => {
-        // если был редирект на форму логина то возвращаем после авторизации обратно
-        if (!!this._authService.redirectUrl) {
-          this._router.navigateByUrl(this._authService.redirectUrl);
-        } else {
-          this._router.navigate(['/']);
-        }
-        }, (error: IHttpError | HttpErrorResponse) => {
-          this.error = (<IHttpError>error).error_description || TT('Неправильный логин или пароль');
-          this._elementToFocus = this._passwordElement;
-        }
-      );
+      .subscribe(this._loginSuccess.bind(this), this._loginFail.bind(this));
+  }
+
+  /**
+   * успешная авторизация
+   */
+  private _loginSuccess() {
+    // если был редирект на форму логина то возвращаем после авторизации обратно
+    if (!!this._authService.redirectUrl) {
+      this._router.navigateByUrl(this._authService.redirectUrl);
+    } else {
+      this._router.navigate(['/']);
+    }
+  }
+
+  /**
+   * провал авторизации
+   * @param error ошибка авторизации
+   */
+  private _loginFail(error: IHttpError | HttpErrorResponse) {
+    this.error = (<IHttpError>error).error_description || TT('Неправильный логин или пароль');
+    this._elementToFocus = this._passwordElement;
   }
 
 }
