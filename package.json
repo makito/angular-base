@@ -1,6 +1,7 @@
 {
   "name": "angular-base",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "angular app starter kit: based on angular-cli with jwt authorization, refresh token, multi language support",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
