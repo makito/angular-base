@@ -31,14 +31,17 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
 
   /**
    * восстановление ответа сервера об ошибке из arraybuffer
+   * так как ангуляр возвращает ошибку в том типе, в котором был запрос
    * @param error ошибка http
    */
   static restoreErrorFromArrayBuffer(error: HttpErrorResponse): HttpErrorResponse {
-    const clonedError = { ...error };
-    if (error.error instanceof ArrayBuffer) {
-      const decodedString = String.fromCharCode.apply(null, new Uint8Array(error.error));
-      clonedError.error = JSON.parse(decodeURIComponent(escape(decodedString)));
+    if (!(error.error instanceof ArrayBuffer)) {
+      return error;
     }
+
+    const clonedError = { ...error };
+    const decodedString = String.fromCharCode.apply(null, new Uint8Array(error.error));
+    clonedError.error = JSON.parse(decodeURIComponent(escape(decodedString)));
     return new HttpErrorResponse(clonedError);
   }
 
