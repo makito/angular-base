@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { throwError as observableThrowError, Observable, of } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
+import { environment } from '@env/environment';
 
 import { IToken, Account, IJwt } from '@app/common';
 
@@ -34,11 +35,6 @@ export class AuthService {
    * имя поля сохранённого аккаунта в локалсторадже
    */
   private static readonly _recentAccountKey: string = 'recent_account';
-
-  /**
-   * основной url авторизации
-   */
-  private static _oauthBaseUrl = '/';
 
   /**
    * нераспарсенный токен
@@ -177,7 +173,7 @@ export class AuthService {
    * @param body объект параметров запроса
    */
   private _oauthRequest(body: HttpParams): Observable<IJwt> {
-    return this._http.post<IJwt>(`${AuthService._oauthBaseUrl}token`, body)
+    return this._http.post<IJwt>(`${environment.authUrl}token`, body)
       .pipe(
         tap(this._onSuccessRespone.bind(this))
       );

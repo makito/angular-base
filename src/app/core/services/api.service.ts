@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpResponse, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { environment } from '@env/environment';
 
-import { AuthService } from './auth.service';
 import { IApiFileRequest } from '@app/common';
 
 /**
@@ -49,8 +49,7 @@ export class ApiService {
   }
 
   constructor(
-    private _http: HttpClient,
-    private _authService: AuthService
+    private _http: HttpClient
   ) { }
 
   /**
@@ -80,8 +79,8 @@ export class ApiService {
       headers: new HttpHeaders({ silent: silent ? '1' : '0' })
     };
     const req = method === 'get' ?
-      this._http.get<T>(action, opts) :
-      this._http.post<T>(action, body, opts);
+      this._http.get<T>(environment.apiUrl + action, opts) :
+      this._http.post<T>(environment.apiUrl + action, body, opts);
     return req
       .pipe(
         map((response: HttpResponse<any>) => {
