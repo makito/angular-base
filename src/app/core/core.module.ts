@@ -1,11 +1,12 @@
 import { NgModule, Optional, SkipSelf, Injector } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 
-import { AuthService } from './services/auth.service';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthGuard } from './guards/auth.guard';
-import { LangInterceptor } from './interceptors/lang.interceptor';
+import { AuthService } from './services/auth.service';
 import { ApiService } from './services/api.service';
+import { ConfigService } from './services/config.service';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LangInterceptor } from './interceptors/lang.interceptor';
 import { RefreshTokenInterceptor } from './interceptors/refresh-token.interceptor';
 import { AuthAbstractInterceptor } from '@app/common';
 
@@ -31,7 +32,8 @@ import { AuthAbstractInterceptor } from '@app/common';
       multi: true
     },
     AuthGuard,
-    ApiService
+    ApiService,
+    ConfigService
   ],
   declarations: []
 })

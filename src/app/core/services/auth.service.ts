@@ -7,6 +7,7 @@ import { Base64 } from 'js-base64';
 import { environment } from '@env/environment';
 
 import { IToken, Account, IJwt } from '@app/common';
+import { ConfigService } from './config.service';
 
 /**
  * сервис авторизации
@@ -15,26 +16,6 @@ import { IToken, Account, IJwt } from '@app/common';
   providedIn: 'root'
 })
 export class AuthService {
-
-  /**
-   * идентификатор приложения
-   */
-  private static readonly _clientId: string = 'c2339ced32ae4fd1949cc91f387100ba';
-
-  /**
-   * имя поля токена авторизации в локалсторадже
-   */
-  private static readonly _jwtAccessTokenKey: string = 'jwt_access_token';
-
-  /**
-   * имя поля токена рефреша в локалсторадже
-   */
-  private static readonly _jwtRefreshTokenKey: string = 'jwt_refresh_token';
-
-  /**
-   * имя поля сохранённого аккаунта в локалсторадже
-   */
-  private static readonly _recentAccountKey: string = 'recent_account';
 
   /**
    * нераспарсенный токен
@@ -91,11 +72,12 @@ export class AuthService {
 
   constructor(
     private _http: HttpClient,
-    private _router: Router
+    private _router: Router,
+    private _config: ConfigService
   ) {
     // восстанавливаем данные из стораджа
-    this._accessTokenRaw = localStorage.getItem(AuthService._jwtAccessTokenKey);
-    this._refreshToken = localStorage.getItem(AuthService._jwtRefreshTokenKey);
+    this._accessTokenRaw = localStorage.getItem(this._config.localStorageNames.accessToken);
+    this._refreshToken = localStorage.getItem(this._config.localStorageNames.refreshToken);
 
     // если в сторадже есть токен то парсим его и восстанавливаем данные пользователя
     if (!!this._accessTokenRaw) {
@@ -108,7 +90,7 @@ export class AuthService {
     }
 
     // если в сторадже есть данные аккаунта - создаём и сохраняем его
-    const accountRaw = localStorage.getItem(AuthService._recentAccountKey);
+    const accountRaw = localStorage.getItem(this._config.localStorageNames.account);
     if (!!accountRaw) {
       this._account = new Account(JSON.parse(accountRaw));
     }
@@ -123,7 +105,7 @@ export class AuthService {
     const body = new HttpParams()
       .set('userName', userName)
       .append('password', password)
-      .append('client_id', AuthService._clientId)
+      .append('client_id', this._config.clientId)
       .append('grant_type', 'password')
       .append('no_auth', '1');
     return this._oauthRequest(body);
@@ -136,7 +118,7 @@ export class AuthService {
   refreshToken(token: string = this._refreshToken): Observable<any> {
     const body = new HttpParams()
       .set('refresh_token', token)
-      .append('client_id', AuthService._clientId)
+      .append('client_id', this._config.clientId)
       .append('grant_type', 'refresh_token')
       .append('no_auth', '1');
     return this._oauthRequest(body);
@@ -146,8 +128,8 @@ export class AuthService {
    * сбрасывает признаки авторизации
    */
   reset() {
-    localStorage.removeItem(AuthService._jwtAccessTokenKey);
-    localStorage.removeItem(AuthService._jwtRefreshTokenKey);
+    localStorage.removeItem(this._config.localStorageNames.accessToken);
+    localStorage.removeItem(this._config.localStorageNames.refreshToken);
     this._accessTokenRaw = null;
     this._accessToken  = null;
   }
@@ -187,14 +169,14 @@ export class AuthService {
     const jwt = response;
 
     this._accessTokenRaw = jwt.access_token;
-    localStorage.setItem(AuthService._jwtAccessTokenKey, this._accessTokenRaw);
+    localStorage.setItem(this._config.localStorageNames.accessToken, this._accessTokenRaw);
 
     this._accessToken = this._parseAccessToken();
 
     this._refreshToken = jwt.refresh_token;
-    localStorage.setItem(AuthService._jwtRefreshTokenKey, this._refreshToken);
+    localStorage.setItem(this._config.localStorageNames.refreshToken, this._refreshToken);
 
     this._account = Account.fromAccessToken(this._accessToken);
-    localStorage.setItem(AuthService._recentAccountKey, JSON.stringify(this._account));
+    localStorage.setItem(this._config.localStorageNames.account, JSON.stringify(this._account));
   }
 }

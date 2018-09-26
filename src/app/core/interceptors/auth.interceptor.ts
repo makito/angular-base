@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { ConfigService } from '../services/config.service';
+
 /**
  * класс интерсептора для установления заголовка с токеном авторизации
  */
@@ -10,12 +12,20 @@ import { Observable } from 'rxjs';
 })
 export class AuthInterceptor implements HttpInterceptor {
 
+  constructor(
+    private _config: ConfigService
+  ) { }
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(this.addToken(req));
+  }
+
   /**
    * добавляет заголовок с токеном в запрос
    * @param req запрос
    * @param token токен
    */
-  static addToken(req: HttpRequest<any>, token: string = localStorage.getItem('jwt_access_token')): HttpRequest<any> {
+  addToken(req: HttpRequest<any>, token: string = localStorage.getItem(this._config.localStorageNames.accessToken)): HttpRequest<any> {
     const noAuth: boolean = req.body instanceof HttpParams &&
       req.body.has('no_auth');
 
@@ -29,10 +39,6 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
     return req;
-  }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(AuthInterceptor.addToken(req));
   }
 
 }

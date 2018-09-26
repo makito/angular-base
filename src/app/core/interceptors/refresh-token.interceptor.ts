@@ -45,6 +45,12 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
     return new HttpErrorResponse(clonedError);
   }
 
+  constructor(
+    private _authInterceptor: AuthInterceptor
+  ) {
+    super();
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req)
       .pipe(
@@ -88,7 +94,7 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
           switchMap((newToken: string): any => {
             if (!!newToken) {
               this._tokenSubject.next(newToken);
-              return next.handle(AuthInterceptor.addToken(req, newToken));
+              return next.handle(this._authInterceptor.addToken(req, newToken));
             }
 
             return this._relogin();
@@ -101,7 +107,7 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
         .pipe(
           filter(token => token != null),
           take(1),
-          switchMap(token => next.handle(AuthInterceptor.addToken(req, token)))
+          switchMap(token => next.handle(this._authInterceptor.addToken(req, token)))
         );
     }
   }
