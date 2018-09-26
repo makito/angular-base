@@ -85,7 +85,7 @@ export class AuthService {
       this._account = Account.fromAccessToken(this._accessToken);
 
       // обновляем токен
-      this.refreshToken().subscribe();
+      this.refreshToken().subscribe(null, () => this.logout());
       return;
     }
 
