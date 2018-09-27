@@ -5,12 +5,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --aot --build-optimizer",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "extract-locale": "ngx-translate-extract -i ./src/app -o ./src/assets/i18n/ru.po ./src/assets/i18n/en.po -c -f pot -m TT",
-    "postinstall": "node patch.js && postinstall.js"
+    "postinstall": "node postinstall.js && patch.js"
   },
   "private": true,
   "dependencies": {
