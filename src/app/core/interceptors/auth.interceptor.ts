@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpParams } from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ConfigService } from '../services/config.service';
@@ -26,8 +26,8 @@ export class AuthInterceptor implements HttpInterceptor {
    * @param token токен
    */
   addToken(req: HttpRequest<any>, token: string = localStorage.getItem(this._config.localStorageNames.accessToken)): HttpRequest<any> {
-    const noAuth: boolean = req.body instanceof HttpParams &&
-      req.body.has('no_auth');
+    const noAuth: boolean = (req.body instanceof HttpParams && req.body.has('no_auth')) ||
+      (req.headers instanceof HttpHeaders && req.headers.has('no_auth'));
 
     // если есть токен и нет параметра обращаться без авторизации то ставим заголовки
     if (!!token && !noAuth) {
