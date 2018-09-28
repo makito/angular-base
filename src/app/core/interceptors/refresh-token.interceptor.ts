@@ -120,8 +120,7 @@ export class RefreshTokenInterceptor extends AuthAbstractInterceptor implements 
   private _handleError(req: HttpRequest<any>, error: HttpErrorResponse): Observable<IHttpError | HttpErrorResponse> {
     // определяем есть ли заголовок молчания при ошибках
     const silent: boolean = req.headers instanceof HttpHeaders &&
-      req.headers.has('silent') &&
-      req.headers['silent'] === '1';
+      req.headers.get('silent') === '1';
 
     const invalidGrant = error &&
       error.status === 400 &&
